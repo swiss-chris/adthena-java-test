@@ -1,13 +1,21 @@
 package formatters;
 
-import java.text.NumberFormat;
-import java.util.Locale;
+import java.text.DecimalFormat;
 
 public class GbpFormatter {
 
-    // TODO implement for pence
     public static String format(Double price) {
-        NumberFormat GBP = NumberFormat.getCurrencyInstance(Locale.UK);
-        return GBP.format(price);
+
+        double rounded = round(price);
+
+        if (rounded < 1) {
+            return new DecimalFormat("#0p").format(rounded * 100);
+        } else {
+            return new DecimalFormat("£#,###,##0.00").format(rounded);
+        }
+    }
+
+    static double round(Double price) {
+        return (double) Math.round(price * 100) / 100.0;
     }
 }
