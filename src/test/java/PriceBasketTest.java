@@ -9,12 +9,6 @@ import static org.junit.Assert.assertTrue;
 public class PriceBasketTest {
 
     @Test
-    public void ApplesMilkBread() {
-
-
-    }
-
-    @Test
     public void getProducts() {
 
         String[] items = {
@@ -23,7 +17,7 @@ public class PriceBasketTest {
             "bread"
         };
 
-        List<Product> products = PriceBasket.getProducts(items);
+        List<Product> products = PriceBasket.findProducts(items);
 
         assertEquals(3, products.size());
         assertTrue(products.contains(Product.APPLES));
@@ -40,7 +34,7 @@ public class PriceBasketTest {
             "bread"
         };
 
-        List<Product> products = PriceBasket.getProducts(items);
+        List<Product> products = PriceBasket.findProducts(items);
 
         assertEquals(1, products.size());
         assertTrue(products.contains(Product.BREAD));

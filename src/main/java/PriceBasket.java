@@ -20,23 +20,24 @@ public class PriceBasket {
         new Apple10p(),
         new SoupsToBread()
     );
-    private final List<Product> lowercaseItems;
 
-    PriceBasket(List<Product> lowercaseItems) {
-        this.lowercaseItems = lowercaseItems;
+    private final List<Product> products;
+
+    private PriceBasket(String[] items) {
+        this.products = findProducts(items);
     }
 
     ////---- NON-STATIC MEMBERS ----////
 
     // make testable
     public static void main(String[] items) {
-
-        // TODO use builder pattern
-        new PriceBasket(getProducts(items)).calculatePrices();
+        // implement help and error messages for wrong input arguments
+        // TODO call getProducts inside constructor
+        new PriceBasket(items).calculatePrices();
     }
 
     // normalize items
-    static List<Product> getProducts(String[] items) {
+    static List<Product> findProducts(String[] items) {
         return Arrays.stream(items)
             .filter(item -> Product.contains(item.toUpperCase()))
             .map(item -> Product.valueOf(item.toUpperCase()))
@@ -45,7 +46,7 @@ public class PriceBasket {
 
     private void calculatePrices() {
         // calculate subtotal
-        Double subtotal = lowercaseItems.stream()
+        Double subtotal = products.stream()
             .map(Product::getPrice)
             .reduce(0.0, Double::sum);
         Double total = subtotal;
@@ -54,8 +55,8 @@ public class PriceBasket {
         System.out.printf("Subtotal: £%.2f%n", subtotal);
 
         // TODO extract to methods or classes
-        // apply rules if possible
-        DISCOUNTS.forEach(discount -> discount.setProducts(lowercaseItems));
+        // apply rules
+        DISCOUNTS.forEach(discount -> discount.setProducts(products));
         DISCOUNTS.forEach(Discount::applyDiscount);
         total = DISCOUNTS.stream().map(Discount::getDiscount).reduce(total, (a, b) -> a - b);
         DISCOUNTS.forEach(discount -> {
@@ -69,7 +70,7 @@ public class PriceBasket {
             System.out.println("(No offers available)");
         }
 
-        // TODO: print total
+        // print total
         System.out.printf("Total price: £%.2f%n", total);
     }
 }
