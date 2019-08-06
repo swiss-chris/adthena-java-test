@@ -1,13 +1,13 @@
 package config.impl;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * - The first constructor argument {@code productCombination} is a list of items that must be present in the basket for the discount to apply <br />
  * - The second constructor argument {@code discountAmount} is the discounted amount for the same productCombination <br />
  * - The third constructor argument {@code discountTextPrefix} is the text that will display in the console for this discount <br />
  */
-// TODO toString(), hashCode(), equals()
 public class DiscountConfig {
 
     private final List<String> productCombination;
@@ -30,5 +30,29 @@ public class DiscountConfig {
 
     public String getDiscountTextPrefix() {
         return discountTextPrefix;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DiscountConfig that = (DiscountConfig) o;
+        return productCombination.equals(that.productCombination) &&
+            discountAmount.equals(that.discountAmount) &&
+            discountTextPrefix.equals(that.discountTextPrefix);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(productCombination, discountAmount, discountTextPrefix);
+    }
+
+    @Override
+    public String toString() {
+        return "DiscountConfig{" +
+            "productCombination=" + productCombination +
+            ", discountAmount=" + discountAmount +
+            ", discountTextPrefix='" + discountTextPrefix + '\'' +
+            '}';
     }
 }

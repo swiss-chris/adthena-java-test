@@ -7,6 +7,7 @@ import java.util.List;
 
 public class PriceCalculator {
 
+    // TODO unit test
     public Double calculateSubtotal(List<Product> products) {
         return products.stream()
             .map(Product::getPrice)

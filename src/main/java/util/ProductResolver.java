@@ -13,7 +13,6 @@ public class ProductResolver {
 
     private ConfigService configService = ConfigServiceProducer.getConfigService();
 
-    // TODO implement error messages for wrong input arguments
     public List<Product> getPricedProducts(String[] items) {
         Map<String, Double> pricedProducts = configService.getPricedProducts();
         return Arrays.stream(items)

@@ -1,6 +1,8 @@
 package discounts;
 
-// TODO toString(), hashCode(), equals()
+import java.util.Objects;
+
+// TODO use Lombok
 public class AppliedDiscount {
 
     private final String discountTextPrefix;
@@ -17,5 +19,27 @@ public class AppliedDiscount {
 
     public Object getDiscountTextPrefix() {
         return discountTextPrefix;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AppliedDiscount that = (AppliedDiscount) o;
+        return discountTextPrefix.equals(that.discountTextPrefix) &&
+            discountAmount.equals(that.discountAmount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(discountTextPrefix, discountAmount);
+    }
+
+    @Override
+    public String toString() {
+        return "AppliedDiscount{" +
+            "discountTextPrefix='" + discountTextPrefix + '\'' +
+            ", discountAmount=" + discountAmount +
+            '}';
     }
 }

@@ -37,4 +37,6 @@ public class PriceBasket {
         return items.length == 0 || Arrays.asList(items).contains("-help");
     }
 
+    // ideas for extension:
+    // - add error messages if user adds wrong arguments/items
 }

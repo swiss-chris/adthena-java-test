@@ -12,13 +12,13 @@ public class DiscountCalculator {
 
     private final List<DiscountConfig> discountRules = ConfigServiceProducer.getConfigService().getDiscountRules();
 
+    // TODO unit test
     public List<AppliedDiscount> applyDiscounts(List<Product> products) {
         List<AppliedDiscount> appliedDiscounts = new ArrayList<>();
         List<String> remainingProducts = products.stream().map(Product::getName).collect(Collectors.toList());
 
         allDiscounts:
         for (DiscountConfig discountRule : discountRules) {
-            // TODO find a cleaner way to do this!
             // apply same rule as many times as possible !
             while (true) {
                 List<String> remainingProductsCopy = new ArrayList<>(remainingProducts);
@@ -26,8 +26,7 @@ public class DiscountCalculator {
                 // check if ALL productCombination products are found inside remainingProducts
                 for (String discountCandidate : discountRule.getProductCombination()) {
                     if (!remainingProductsCopy.contains(discountCandidate)) {
-                        // TODO find a cleaner way to do this!
-                        // continue outer for loop !
+                        // continue outer for-loop !
                         continue allDiscounts;
                     } else {
                         remainingProductsCopy.remove(discountCandidate);
