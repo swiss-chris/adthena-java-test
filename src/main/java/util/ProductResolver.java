@@ -1,7 +1,7 @@
 package util;
 
 import config.ConfigService;
-import config.impl.SimpleConfigService;
+import config.impl.ConfigServiceProducer;
 import products.Product;
 
 import java.util.Arrays;
@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ProductFinder {
+public class ProductResolver {
 
-    private ConfigService configService = new SimpleConfigService();
+    private ConfigService configService = ConfigServiceProducer.getConfigService();
 
     // TODO implement error messages for wrong input arguments
     public List<Product> getPricedProducts(String[] items) {

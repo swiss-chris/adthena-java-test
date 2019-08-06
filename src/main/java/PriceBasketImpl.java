@@ -4,7 +4,7 @@ import formatters.CurrencyFormatter;
 import formatters.impl.GbpFormatter;
 import products.Product;
 import util.PriceCalculator;
-import util.ProductFinder;
+import util.ProductResolver;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ class PriceBasketImpl {
     private final List<Product> products;
 
     PriceBasketImpl(String[] items) {
-        this.products = new ProductFinder().getPricedProducts(items);
+        this.products = new ProductResolver().getPricedProducts(items);
     }
 
     Output calculatePrices() {

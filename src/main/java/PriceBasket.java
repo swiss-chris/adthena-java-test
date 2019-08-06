@@ -1,5 +1,5 @@
 import config.ConfigService;
-import config.impl.SimpleConfigService;
+import config.impl.ConfigServiceProducer;
 
 import java.util.Arrays;
 
@@ -26,7 +26,7 @@ public class PriceBasket {
         if (isHelpNeeded(items)) {
             System.out.printf("%nPlease enter a list of items, separated by a space, e.g. '%s soup soup bread'%n%n", PriceBasket.class.getSimpleName());
             System.out.printf("The available items are:%n%n");
-            ConfigService configService = new SimpleConfigService();
+            ConfigService configService = ConfigServiceProducer.getConfigService();
             configService.getPricedProducts().keySet().forEach(name -> System.out.println(" - " + name));
             System.out.printf("%nUnknown items will be ignored.%n");
             System.exit(0);

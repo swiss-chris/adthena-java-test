@@ -19,7 +19,7 @@ public class productFinderTest {
             "Bread"
         };
 
-        List<Product> products = new ProductFinder().getPricedProducts(items);
+        List<Product> products = new ProductResolver().getPricedProducts(items);
 
         assertEquals(3, products.size());
         assertTrue(products.stream().anyMatch(product -> product.getName().equals("apples")));
@@ -36,7 +36,7 @@ public class productFinderTest {
             "bread"
         };
 
-        List<Product> products = new ProductFinder().getPricedProducts(items);
+        List<Product> products = new ProductResolver().getPricedProducts(items);
 
         assertEquals(1, products.size());
         assertTrue(products.stream().anyMatch(product -> product.getName().equals("bread")));
