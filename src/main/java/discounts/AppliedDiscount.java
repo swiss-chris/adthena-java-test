@@ -1,5 +1,6 @@
 package discounts;
 
+// TODO toString(), hashCode(), equals()
 public class AppliedDiscount {
 
     private final String discountTextPrefix;

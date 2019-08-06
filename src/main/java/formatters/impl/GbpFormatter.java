@@ -1,9 +1,12 @@
-package formatters;
+package formatters.impl;
+
+import formatters.CurrencyFormatter;
 
 import java.text.DecimalFormat;
 
 public class GbpFormatter implements CurrencyFormatter {
 
+    @Override
     public String format(Double price) {
 
         double rounded = round(price);

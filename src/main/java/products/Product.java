@@ -1,5 +1,6 @@
 package products;
 
+// TODO toString(), hashCode(), equals()
 public class Product {
 
     private final String name;

@@ -6,16 +6,14 @@ import discounts.AppliedDiscount;
 import products.Product;
 
 import java.util.List;
-import java.util.Map;
 
 public class PriceCalculator {
 
     private ConfigService configService = new SimpleConfigService();
 
     public Double calculateSubtotal(List<Product> products) {
-        Map<String, Double> pricedProducts = configService.getPricedProducts();
         return products.stream()
-            .map(product -> pricedProducts.get(product.getName()))
+            .map(Product::getPrice)
             .reduce(0.0, Double::sum);
     }
 

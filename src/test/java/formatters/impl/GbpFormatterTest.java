@@ -1,4 +1,4 @@
-package formatters;
+package formatters.impl;
 
 import org.junit.Test;
 

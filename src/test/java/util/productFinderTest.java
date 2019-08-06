@@ -8,7 +8,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ProductFinderTest {
+public class productFinderTest {
 
     @Test
     public void findProducts() {
@@ -19,7 +19,7 @@ public class ProductFinderTest {
             "Bread"
         };
 
-        List<Product> products = new ProductFinder().findProducts(items);
+        List<Product> products = new ProductFinder().getPricedProducts(items);
 
         assertEquals(3, products.size());
         assertTrue(products.stream().anyMatch(product -> product.getName().equals("apples")));
@@ -36,7 +36,7 @@ public class ProductFinderTest {
             "bread"
         };
 
-        List<Product> products = new ProductFinder().findProducts(items);
+        List<Product> products = new ProductFinder().getPricedProducts(items);
 
         assertEquals(1, products.size());
         assertTrue(products.stream().anyMatch(product -> product.getName().equals("bread")));

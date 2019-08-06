@@ -1,8 +1,5 @@
 public class PriceBasket {
 
-    // TODO toString(), hashCode(), equals()
-    // TODO i18n
-
     public static void main(String[] items) {
         // TODO implement help and error messages for wrong input arguments
 

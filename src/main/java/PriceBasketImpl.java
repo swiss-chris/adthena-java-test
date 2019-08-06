@@ -1,7 +1,7 @@
 import discounts.AppliedDiscount;
 import discounts.DiscountCalculator;
 import formatters.CurrencyFormatter;
-import formatters.GbpFormatter;
+import formatters.impl.GbpFormatter;
 import products.Product;
 import util.PriceCalculator;
 import util.ProductFinder;
@@ -21,7 +21,7 @@ class PriceBasketImpl {
     private final List<Product> products;
 
     PriceBasketImpl(String[] items) {
-        this.products = new ProductFinder().findProducts(items);
+        this.products = new ProductFinder().getPricedProducts(items);
     }
 
     Output calculatePrices() {
@@ -39,10 +39,11 @@ class PriceBasketImpl {
         if (appliedDiscounts.isEmpty()) {
             output.getDiscountTexts().add(DISCOUNT_NO_OFFERS_AVAILABLE);
         } else {
-            appliedDiscounts.forEach(discount -> {
-                String discountText = discount.getDiscountTextPrefix() + ": -" + currencyFormatter.format(discount.getDiscountAmount());
+            for (AppliedDiscount appliedDiscount : appliedDiscounts) {
+                String formattedAmount = currencyFormatter.format(appliedDiscount.getDiscountAmount());
+                String discountText = appliedDiscount.getDiscountTextPrefix() + ": -" + formattedAmount;
                 output.getDiscountTexts().add(discountText);
-            });
+            }
         }
 
         // calculate total

@@ -2,6 +2,7 @@ package config.impl;
 
 import java.util.List;
 
+// TODO toString(), hashCode(), equals()
 public class DiscountConfig {
 
     private final List<String> productCombination;
