@@ -1,35 +1,44 @@
 package discounts.impl;
 
-import discounts.Discount;
+import config.ConfigService;
+import config.SimpleConfigService;
+import discounts.DiscountRule;
+import formatters.CurrencyFormatter;
 import formatters.GbpFormatter;
 
-import static products.Product.BREAD;
-import static products.Product.SOUP;
+import java.util.Map;
 
-public class SoupsToBread extends Discount {
+public class SoupsToBread extends DiscountRule {
+
+    private final ConfigService configService = new SimpleConfigService();
+    private final CurrencyFormatter currencyFormatter = new GbpFormatter();
 
     private int nbEligibleSoups = 0;
+
+    private final String discountTextPrefix = "Bread 50% off (per 2 tins of soups)";
 
     // TODO unit test separately
     @Override
     public void applyDiscount() {
-        int countSoups = (int) products
+        Map<String, Double> pricedProducts = configService.getPricedProducts();
+
+        int countSoups = (int) this.products
             .stream()
-            .filter(SOUP::equals)
+            .filter(product -> product.getName().equals("soup"))
             .count();
-        int countBreads = (int) products
+        int countBreads = (int) this.products
             .stream()
-            .filter(BREAD::equals)
+            .filter(product -> product.getName().equals("bread"))
             .count();
 
         nbEligibleSoups = Math.min(countSoups / 2, countBreads);
 
-        discount = nbEligibleSoups * BREAD.getPrice() * 0.5;
+        discount = nbEligibleSoups * pricedProducts.get("bread") * 0.5;
     }
 
     @Override
-    public String getDiscountText() {
-        return "Bread 50% off (per 2 tins of soups): -" + GbpFormatter.format(discount);
+    public String getDiscountTextPrefix() {
+        return discountTextPrefix;
     }
 
     @Override

@@ -1,76 +1,73 @@
-import discounts.Discount;
-import discounts.impl.Apple10p;
-import discounts.impl.SoupsToBread;
+import discounts.AppliedDiscount;
+import discounts.DiscountCalculator;
+import formatters.CurrencyFormatter;
+import formatters.GbpFormatter;
 import products.Product;
+import util.PriceCalculator;
+import util.ProductFinder;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PriceBasket {
 
-    // TODO
-    // configure currency
-    // external configuration of products and discounts
+    // TODO toString(), hashCode(), equals()
+    // TODO configure currency
+    // TODO i18n
+    // TODO external configuration of products and discounts
 
     ////---- STATIC MEMBERS ----////
 
-    // TODO use external config file
-    private final static List<Discount> DISCOUNTS = Arrays.asList(
-        new Apple10p(),
-        new SoupsToBread()
-    );
-
+    private final static String SUBTOTAL = "subtotal";
+    private final static String DISCOUNTS = "discounts";
+    private final static String TOTAL = "total";
     private final List<Product> products;
 
-    private PriceBasket(String[] items) {
-        this.products = findProducts(items);
-    }
-
     ////---- NON-STATIC MEMBERS ----////
+    private final PriceCalculator priceCalculator = new PriceCalculator();
+    private final DiscountCalculator discountCalculator = new DiscountCalculator();
+    private final CurrencyFormatter currencyFormatter = new GbpFormatter();
+
+    PriceBasket(String[] items) {
+        this.products = new ProductFinder().findProducts(items);
+    }
 
     // make testable
     public static void main(String[] items) {
         // implement help and error messages for wrong input arguments
         // TODO call getProducts inside constructor
-        new PriceBasket(items).calculatePrices();
+        Output output = new PriceBasket(items).calculatePrices();
+        System.out.println(output.getSubtotalText());
+        output.getDiscountTexts().forEach(System.out::println);
+        System.out.println(output.getTotalText());
     }
 
-    // normalize items
-    static List<Product> findProducts(String[] items) {
-        return Arrays.stream(items)
-            .filter(item -> Product.contains(item.toUpperCase()))
-            .map(item -> Product.valueOf(item.toUpperCase()))
-            .collect(Collectors.toList());
-    }
+    Output calculatePrices() {
+        Output output = new Output();
 
-    private void calculatePrices() {
         // calculate subtotal
-        Double subtotal = products.stream()
-            .map(Product::getPrice)
-            .reduce(0.0, Double::sum);
-        Double total = subtotal;
+        Double subtotal = priceCalculator.calculateSubtotal(products);
+        String subtotalText = "Subtotal: " + currencyFormatter.format(subtotal);
+        output.setSubtotalText(subtotalText);
 
-        // print subtotal
-        System.out.printf("Subtotal: £%.2f%n", subtotal);
-
-        // TODO extract to methods or classes
-        // apply rules
-        DISCOUNTS.forEach(discount -> discount.setProducts(products));
-        DISCOUNTS.forEach(Discount::applyDiscount);
-        total = DISCOUNTS.stream().map(Discount::getDiscount).reduce(total, (a, b) -> a - b);
-        DISCOUNTS.forEach(discount -> {
-            if (discount.hasDiscount()) {
-                System.out.println(discount.getDiscountText());
-            }
-        });
-
+        // calculate discounts
+        List<AppliedDiscount> appliedDiscounts = discountCalculator.applyDiscounts(products);
         // print individual offers
-        if (DISCOUNTS.stream().noneMatch(Discount::hasDiscount)) {
-            System.out.println("(No offers available)");
+        if (appliedDiscounts.isEmpty()) {
+            String discountText = "(No offers available)";
+            output.getDiscountTexts().add(discountText);
+        } else {
+            appliedDiscounts.forEach(discount -> {
+                String discountText = discount.getDiscountTextPrefix() + ": -" + currencyFormatter.format(discount.getDiscountAmount());
+                output.getDiscountTexts().add(discountText);
+            });
         }
 
-        // print total
-        System.out.printf("Total price: £%.2f%n", total);
+        // calculate total
+        Double total = priceCalculator.calculateTotal(subtotal, appliedDiscounts);
+        String totalText = "Total price: " + currencyFormatter.format(total);
+        output.setTotalText(totalText);
+
+        return output;
     }
+
 }

@@ -1,25 +1,27 @@
 package discounts.impl;
 
-import discounts.Discount;
+import discounts.DiscountRule;
+import formatters.CurrencyFormatter;
 import formatters.GbpFormatter;
 import products.Product;
 
-import static products.Product.APPLES;
+public class Apple10p extends DiscountRule {
 
-public class Apple10p extends Discount {
+    private final CurrencyFormatter currencyFormatter = new GbpFormatter();
+    private String discountTextPrefix = "Apples 10% off";
 
     @Override
     public void applyDiscount() {
         discount += products
             .stream()
-            .filter(APPLES::equals)
+            .filter(product -> product.getName().equals("apples"))
             .map(Product::getPrice)
             .reduce(discount, (a, b) -> a + 0.10);
     }
 
     @Override
-    public String getDiscountText() {
-        return "Apples 10% off: -" + GbpFormatter.format(discount);
+    public String getDiscountTextPrefix() {
+        return discountTextPrefix;
     }
 
     @Override

@@ -2,9 +2,9 @@ package formatters;
 
 import java.text.DecimalFormat;
 
-public class GbpFormatter {
+public class GbpFormatter implements CurrencyFormatter {
 
-    public static String format(Double price) {
+    public String format(Double price) {
 
         double rounded = round(price);
 
@@ -15,7 +15,7 @@ public class GbpFormatter {
         }
     }
 
-    static double round(Double price) {
+    double round(Double price) {
         return (double) Math.round(price * 100) / 100.0;
     }
 }
