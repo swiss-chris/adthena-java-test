@@ -10,9 +10,8 @@ import java.util.stream.Collectors;
 
 public class DiscountCalculator {
 
-    private final List<DiscountConfig> discountRules = ConfigServiceProducer.getConfigService().getDiscountRules();
+    private List<DiscountConfig> discountRules = ConfigServiceProducer.getConfigService().getDiscountRules();
 
-    // TODO unit test
     public List<AppliedDiscount> applyDiscounts(List<Product> products) {
         List<AppliedDiscount> appliedDiscounts = new ArrayList<>();
         List<String> remainingProducts = products.stream().map(Product::getName).collect(Collectors.toList());
@@ -40,5 +39,10 @@ public class DiscountCalculator {
         }
 
         return appliedDiscounts;
+    }
+
+    // for testing only
+    void setDiscountRules(List<DiscountConfig> discountRules) {
+        this.discountRules = discountRules;
     }
 }
