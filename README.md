@@ -1,7 +1,7 @@
 ## PriceBasket
 
 ### Prerequisite
-* Java 8 or higher is installed on your system
+* Java 8 (or higher) is installed on your system
 
 ### Steps to run
 
