@@ -1,58 +1,17 @@
 package config.impl;
 
+import lombok.Data;
+
 import java.util.List;
-import java.util.Objects;
 
 /**
- * - The first constructor argument {@code productCombination} is a list of items that must be present in the basket for the discount to apply <br />
- * - The second constructor argument {@code discountAmount} is the discounted amount for the same productCombination <br />
- * - The third constructor argument {@code discountTextPrefix} is the text that will display in the console for this discount <br />
+ * - The first field {@code productCombination} is a list of items that must be present in the basket for the discount to apply <br />
+ * - The second field {@code discountAmount} is the discounted amount for the same productCombination <br />
+ * - The third field {@code discountTextPrefix} is the text that will display in the console for this discount <br />
  */
+@Data
 public class DiscountConfig {
-
     private final List<String> productCombination;
     private final Double discountAmount;
     private final String discountTextPrefix;
-
-    DiscountConfig(List<String> productCombination, Double discountAmount, String discountTextPrefix) {
-        this.productCombination = productCombination;
-        this.discountAmount = discountAmount;
-        this.discountTextPrefix = discountTextPrefix;
-    }
-
-    public List<String> getProductCombination() {
-        return productCombination;
-    }
-
-    public Double getDiscountAmount() {
-        return discountAmount;
-    }
-
-    public String getDiscountTextPrefix() {
-        return discountTextPrefix;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        DiscountConfig that = (DiscountConfig) o;
-        return productCombination.equals(that.productCombination) &&
-            discountAmount.equals(that.discountAmount) &&
-            discountTextPrefix.equals(that.discountTextPrefix);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(productCombination, discountAmount, discountTextPrefix);
-    }
-
-    @Override
-    public String toString() {
-        return "DiscountConfig{" +
-            "productCombination=" + productCombination +
-            ", discountAmount=" + discountAmount +
-            ", discountTextPrefix='" + discountTextPrefix + '\'' +
-            '}';
-    }
 }
