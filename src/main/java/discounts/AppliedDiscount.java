@@ -1,11 +1,7 @@
 package discounts;
 
-import formatters.CurrencyFormatter;
-import formatters.GbpFormatter;
-
 public class AppliedDiscount {
 
-    private final CurrencyFormatter currencyFormatter = new GbpFormatter();
     private final String discountTextPrefix;
     private final Double discountAmount;
 

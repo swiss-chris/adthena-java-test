@@ -1,7 +1,7 @@
 package util;
 
 import config.ConfigService;
-import config.SimpleConfigService;
+import config.impl.SimpleConfigService;
 import products.Product;
 
 import java.util.Arrays;

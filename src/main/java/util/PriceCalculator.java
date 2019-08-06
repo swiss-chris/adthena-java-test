@@ -1,7 +1,7 @@
 package util;
 
 import config.ConfigService;
-import config.SimpleConfigService;
+import config.impl.SimpleConfigService;
 import discounts.AppliedDiscount;
 import products.Product;
 

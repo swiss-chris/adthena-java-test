@@ -1,4 +1,6 @@
-package config;
+package config.impl;
+
+import config.ConfigService;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,8 +22,8 @@ public class SimpleConfigService implements ConfigService {
     @Override
     public List<DiscountConfig> getDiscountRules() {
         return Arrays.asList(
-            new DiscountConfig(Arrays.asList("apple"), "apple", 10, "Apples 10% off"),
-            new DiscountConfig(Arrays.asList("soup", "soup", "bread"), "bread", 50, "Bread 50% off (per 2 tins of soups)")
+            new DiscountConfig(Arrays.asList("apples"), 0.10, "Apples 10% off"),
+            new DiscountConfig(Arrays.asList("soup", "soup", "bread"), 0.40, "Bread 50% off (per 2 tins of soups)")
         );
     }
 

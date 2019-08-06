@@ -6,6 +6,6 @@ public class PriceCalculatorTest {
 
     @Test
     public void calculateSubtotal() {
-        // TODO
+        // TODO unit test
     }
 }

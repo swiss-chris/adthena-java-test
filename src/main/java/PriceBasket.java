@@ -11,33 +11,39 @@ import java.util.List;
 public class PriceBasket {
 
     // TODO toString(), hashCode(), equals()
-    // TODO configure currency
     // TODO i18n
-    // TODO external configuration of products and discounts
 
     ////---- STATIC MEMBERS ----////
 
-    private final static String SUBTOTAL = "subtotal";
-    private final static String DISCOUNTS = "discounts";
-    private final static String TOTAL = "total";
-    private final List<Product> products;
+    static final String SUBTOTAL_PREFIX = "Subtotal";
+    static final String DISCOUNT_NO_OFFERS_AVAILABLE = "(No offers available)";
+    static final String TOTAL_PRICE_PREFIX = "Total price";
 
     ////---- NON-STATIC MEMBERS ----////
+
     private final PriceCalculator priceCalculator = new PriceCalculator();
     private final DiscountCalculator discountCalculator = new DiscountCalculator();
     private final CurrencyFormatter currencyFormatter = new GbpFormatter();
+
+    private final List<Product> products;
 
     PriceBasket(String[] items) {
         this.products = new ProductFinder().findProducts(items);
     }
 
-    // make testable
     public static void main(String[] items) {
-        // implement help and error messages for wrong input arguments
-        // TODO call getProducts inside constructor
+        // TODO implement help and error messages for wrong input arguments
+
+        // calculate results
         Output output = new PriceBasket(items).calculatePrices();
+
+        // print subtotal
         System.out.println(output.getSubtotalText());
+
+        // print discounts
         output.getDiscountTexts().forEach(System.out::println);
+
+        // print total
         System.out.println(output.getTotalText());
     }
 
@@ -46,15 +52,14 @@ public class PriceBasket {
 
         // calculate subtotal
         Double subtotal = priceCalculator.calculateSubtotal(products);
-        String subtotalText = "Subtotal: " + currencyFormatter.format(subtotal);
+        String subtotalText = SUBTOTAL_PREFIX + ": " + currencyFormatter.format(subtotal);
         output.setSubtotalText(subtotalText);
 
         // calculate discounts
         List<AppliedDiscount> appliedDiscounts = discountCalculator.applyDiscounts(products);
         // print individual offers
         if (appliedDiscounts.isEmpty()) {
-            String discountText = "(No offers available)";
-            output.getDiscountTexts().add(discountText);
+            output.getDiscountTexts().add(DISCOUNT_NO_OFFERS_AVAILABLE);
         } else {
             appliedDiscounts.forEach(discount -> {
                 String discountText = discount.getDiscountTextPrefix() + ": -" + currencyFormatter.format(discount.getDiscountAmount());
@@ -64,9 +69,10 @@ public class PriceBasket {
 
         // calculate total
         Double total = priceCalculator.calculateTotal(subtotal, appliedDiscounts);
-        String totalText = "Total price: " + currencyFormatter.format(total);
+        String totalText = TOTAL_PRICE_PREFIX + ": " + currencyFormatter.format(total);
         output.setTotalText(totalText);
 
+        // return result
         return output;
     }
 

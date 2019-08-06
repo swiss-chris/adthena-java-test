@@ -1,5 +1,7 @@
 package config;
 
+import config.impl.DiscountConfig;
+
 import java.util.List;
 import java.util.Map;
 

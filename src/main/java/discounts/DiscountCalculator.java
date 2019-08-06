@@ -1,28 +1,45 @@
 package discounts;
 
-import discounts.impl.Apple10p;
-import discounts.impl.SoupsToBread;
+import config.impl.DiscountConfig;
+import config.impl.SimpleConfigService;
 import products.Product;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DiscountCalculator {
 
-    // TODO use external config file
-    private final List<DiscountRule> DISCOUNT_RULES = Arrays.asList(
-        new Apple10p(),
-        new SoupsToBread()
-    );
+    private final List<DiscountConfig> discountRules = new SimpleConfigService().getDiscountRules();
 
     public List<AppliedDiscount> applyDiscounts(List<Product> products) {
         List<AppliedDiscount> appliedDiscounts = new ArrayList<>();
-        DISCOUNT_RULES.forEach(discountRule -> discountRule.setProducts(products));
-        DISCOUNT_RULES.forEach(DiscountRule::applyDiscount);
-        DISCOUNT_RULES.stream().filter(DiscountRule::hasDiscount).forEach(discountRule ->
-            appliedDiscounts.add(new AppliedDiscount(discountRule.getDiscountTextPrefix(), discountRule.getDiscount()))
-        );
+        List<String> remainingProducts = products.stream().map(Product::getName).collect(Collectors.toList());
+
+        allDiscounts:
+        for (DiscountConfig discountRule : discountRules) {
+            // TODO find a cleaner way to do this!
+            // apply same rule as many times as possible !
+            while (true) {
+                List<String> remainingProductsCopy = new ArrayList<>(remainingProducts);
+
+                // check if ALL productCombination products are found inside remainingProducts
+                for (String discountCandidate : discountRule.getProductCombination()) {
+                    if (!remainingProductsCopy.contains(discountCandidate)) {
+                        // TODO find a cleaner way to do this!
+                        // continue outer for loop !
+                        continue allDiscounts;
+                    } else {
+                        remainingProductsCopy.remove(discountCandidate);
+                    }
+                }
+
+                // if so, remove them all from remainingProducts and add a new AppliedDiscount
+                remainingProducts = remainingProductsCopy;
+                appliedDiscounts.add(new AppliedDiscount(discountRule.getDiscountTextPrefix(), discountRule.getDiscountAmount()));
+            }
+        }
+
         return appliedDiscounts;
     }
 }
