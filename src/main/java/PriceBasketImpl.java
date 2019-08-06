@@ -12,6 +12,8 @@ class PriceBasketImpl {
 
     static final String SUBTOTAL_PREFIX = "Subtotal";
     static final String DISCOUNT_NO_OFFERS_AVAILABLE = "(No offers available)";
+    static final String DISCOUNT_APPLES_PREFIX = "Apples 10% off";
+    static final String DISCOUNT_BREAD_AND_SOUPS_PREFIX = "Bread 50% off";
     static final String TOTAL_PRICE_PREFIX = "Total price";
 
     private final PriceCalculator priceCalculator = new PriceCalculator();

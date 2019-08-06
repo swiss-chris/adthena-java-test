@@ -34,10 +34,11 @@ class SimpleConfigService implements ConfigService {
      *
      * @return a list of {@link DiscountConfig}
      */
+    // TODO use constants for discountTextPrefix and reuse in IntegrationTest
     @Override
     public List<DiscountConfig> getDiscountRules() {
         return Arrays.asList(
-            new DiscountConfig(Arrays.asList("soup", "soup", "bread"), 0.40, "Bread 50% off (per 2 tins of soups)"),
+            new DiscountConfig(Arrays.asList("soup", "soup", "bread"), 0.40, "Bread 50% off"),
             new DiscountConfig(Arrays.asList("apples"), 0.10, "Apples 10% off")
         );
     }

@@ -4,9 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 public class PriceBasketImplIntegrationTest {
 
-    private static final String DISCOUNT_APPLES_PREFIX = "Apples 10% off";
-    private static final String DISCOUNT_BREAD_AND_SOUPS_PREFIX = "Bread 50% off (per 2 tins of soups)";
-
     @Test
     public void main_noDiscountsApply() {
         String[] items = {"soup"};
@@ -31,7 +28,7 @@ public class PriceBasketImplIntegrationTest {
 
         assertEquals(PriceBasketImpl.SUBTOTAL_PREFIX + ": £3.10", output.getSubtotalText());
         assertEquals(1, output.getDiscountTexts().size());
-        assertEquals(DISCOUNT_APPLES_PREFIX + ": -10p", output.getDiscountTexts().get(0));
+        assertEquals(PriceBasketImpl.DISCOUNT_APPLES_PREFIX + ": -10p", output.getDiscountTexts().get(0));
         assertEquals(PriceBasketImpl.TOTAL_PRICE_PREFIX + ": £3.00", output.getTotalText());
     }
 
@@ -54,8 +51,8 @@ public class PriceBasketImplIntegrationTest {
 
         assertEquals(PriceBasketImpl.SUBTOTAL_PREFIX + ": £7.25", output.getSubtotalText());
         assertEquals(2, output.getDiscountTexts().size());
-        assertEquals(DISCOUNT_BREAD_AND_SOUPS_PREFIX + ": -40p", output.getDiscountTexts().get(0));
-        assertEquals(DISCOUNT_BREAD_AND_SOUPS_PREFIX + ": -40p", output.getDiscountTexts().get(1));
+        assertEquals(PriceBasketImpl.DISCOUNT_BREAD_AND_SOUPS_PREFIX + ": -40p", output.getDiscountTexts().get(0));
+        assertEquals(PriceBasketImpl.DISCOUNT_BREAD_AND_SOUPS_PREFIX + ": -40p", output.getDiscountTexts().get(1));
         assertEquals(PriceBasketImpl.TOTAL_PRICE_PREFIX + ": £6.45", output.getTotalText());
     }
 }
