@@ -5,7 +5,7 @@ import java.text.DecimalFormat;
 class GbpFormatter implements CurrencyFormatter {
 
     @Override
-    public String format(Double price) {
+    public String format(final Double price) {
 
         double rounded = round(price);
 
@@ -16,7 +16,7 @@ class GbpFormatter implements CurrencyFormatter {
         }
     }
 
-    double round(Double price) {
+    double round(final Double price) {
         return (double) Math.round(price * 100) / 100.0;
     }
 }

@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 class PriceBasketHelper {
 
-    static void displayHelpIfNecessary(String[] items) {
+    static void displayHelpIfNecessary(final String[] items) {
         if (isHelpNeeded(items)) {
             System.out.printf("%nPlease enter a list of items, separated by a space, e.g. '%s soup soup bread'%n%n", PriceBasket.class.getSimpleName());
             System.out.printf("The available items are:%n%n");
@@ -18,7 +18,7 @@ class PriceBasketHelper {
         }
     }
 
-    private static boolean isHelpNeeded(String[] items) {
+    private static boolean isHelpNeeded(final String[] items) {
         return items.length == 0 || Arrays.asList(items).contains("-help");
     }
 }

@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 
 public class DiscountCalculator {
 
-    private final List<DiscountConfig> discountRules;
+    private final DiscountConfigService discountConfigService;
 
-    public DiscountCalculator(DiscountConfigService discountConfigService) {
-        discountRules = discountConfigService.getDiscountRules();
+    public DiscountCalculator(final DiscountConfigService discountConfigService) {
+        this.discountConfigService = discountConfigService;
     }
 
     public List<AppliedDiscount> applyDiscounts(List<Product> products) {
@@ -21,7 +21,7 @@ public class DiscountCalculator {
         List<String> remainingProducts = products.stream().map(Product::getName).collect(Collectors.toList());
 
         allDiscounts:
-        for (DiscountConfig discountRule : discountRules) {
+        for (DiscountConfig discountRule : discountConfigService.getDiscountRules()) {
             // apply same rule as many times as possible !
             while (true) {
                 List<String> remainingProductsCopy = new ArrayList<>(remainingProducts);

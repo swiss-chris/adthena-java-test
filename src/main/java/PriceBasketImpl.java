@@ -20,11 +20,11 @@ class PriceBasketImpl {
 
     private final DiscountCalculator discountCalculator;
 
-    PriceBasketImpl(DiscountConfigService discountConfigService) {
+    PriceBasketImpl(final DiscountConfigService discountConfigService) {
         discountCalculator = new DiscountCalculator(discountConfigService);
     }
 
-    Output calculatePrices(String[] items) {
+    Output calculatePrices(final String[] items) {
         List<Product> products = new ProductResolver().getPricedProducts(items);
 
         // results will go into here

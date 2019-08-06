@@ -13,7 +13,7 @@ public class ProductResolver {
 
     private ProductConfigService productConfigService = ConfigServiceProducer.getProductConfigService();
 
-    public List<Product> getPricedProducts(String[] items) {
+    public List<Product> getPricedProducts(final String[] items) {
         Map<String, Double> pricedProducts = productConfigService.getPricedProducts();
         return Arrays.stream(items)
             .filter(item -> pricedProducts.containsKey(item.toLowerCase()))
