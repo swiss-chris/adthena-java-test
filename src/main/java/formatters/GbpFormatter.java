@@ -1,10 +1,8 @@
-package formatters.impl;
-
-import formatters.CurrencyFormatter;
+package formatters;
 
 import java.text.DecimalFormat;
 
-public class GbpFormatter implements CurrencyFormatter {
+class GbpFormatter implements CurrencyFormatter {
 
     @Override
     public String format(Double price) {

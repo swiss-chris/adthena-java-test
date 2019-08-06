@@ -1,16 +1,18 @@
-import config.ConfigService;
-import config.impl.ConfigServiceProducer;
+import config.ConfigServiceProducer;
 
-import java.util.Arrays;
-
+/**
+ * ideas for extension: <br />
+ * - add error messages if user adds wrong arguments/items <br/>
+ * - add i18n <br />
+ */
 public class PriceBasket {
 
     public static void main(String[] items) {
         // check if user needs help
-        checkForHelpOption(items);
+        PriceBasketHelper.displayHelpIfNecessary(items);
 
         // calculate results
-        Output output = new PriceBasketImpl(items).calculatePrices();
+        Output output = new PriceBasketImpl(ConfigServiceProducer.getDiscountConfigService()).calculatePrices(items);
 
         // print subtotal
         System.out.println(output.getSubtotalText());
@@ -21,22 +23,4 @@ public class PriceBasket {
         // print total
         System.out.println(output.getTotalText());
     }
-
-    private static void checkForHelpOption(String[] items) {
-        if (isHelpNeeded(items)) {
-            System.out.printf("%nPlease enter a list of items, separated by a space, e.g. '%s soup soup bread'%n%n", PriceBasket.class.getSimpleName());
-            System.out.printf("The available items are:%n%n");
-            ConfigService configService = ConfigServiceProducer.getConfigService();
-            configService.getPricedProducts().keySet().forEach(name -> System.out.println(" - " + name));
-            System.out.printf("%nUnknown items will be ignored.%n");
-            System.exit(0);
-        }
-    }
-
-    private static boolean isHelpNeeded(String[] items) {
-        return items.length == 0 || Arrays.asList(items).contains("-help");
-    }
-
-    // ideas for extension:
-    // - add error messages if user adds wrong arguments/items
 }

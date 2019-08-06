@@ -1,7 +1,7 @@
 package discounts;
 
-import config.impl.ConfigServiceProducer;
-import config.impl.DiscountConfig;
+import config.DiscountConfig;
+import config.DiscountConfigService;
 import products.Product;
 
 import java.util.ArrayList;
@@ -10,7 +10,11 @@ import java.util.stream.Collectors;
 
 public class DiscountCalculator {
 
-    private List<DiscountConfig> discountRules = ConfigServiceProducer.getConfigService().getDiscountRules();
+    private final List<DiscountConfig> discountRules;
+
+    public DiscountCalculator(DiscountConfigService discountConfigService) {
+        discountRules = discountConfigService.getDiscountRules();
+    }
 
     public List<AppliedDiscount> applyDiscounts(List<Product> products) {
         List<AppliedDiscount> appliedDiscounts = new ArrayList<>();
@@ -39,10 +43,5 @@ public class DiscountCalculator {
         }
 
         return appliedDiscounts;
-    }
-
-    // for testing only
-    void setDiscountRules(List<DiscountConfig> discountRules) {
-        this.discountRules = discountRules;
     }
 }

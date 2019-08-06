@@ -1,4 +1,4 @@
-package config.impl;
+package config;
 
 import lombok.Data;
 

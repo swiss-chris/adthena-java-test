@@ -1,7 +1,7 @@
 package util;
 
-import config.ConfigService;
-import config.impl.ConfigServiceProducer;
+import config.ConfigServiceProducer;
+import config.ProductConfigService;
 import products.Product;
 
 import java.util.Arrays;
@@ -11,10 +11,10 @@ import java.util.stream.Collectors;
 
 public class ProductResolver {
 
-    private ConfigService configService = ConfigServiceProducer.getConfigService();
+    private ProductConfigService productConfigService = ConfigServiceProducer.getProductConfigService();
 
     public List<Product> getPricedProducts(String[] items) {
-        Map<String, Double> pricedProducts = configService.getPricedProducts();
+        Map<String, Double> pricedProducts = productConfigService.getPricedProducts();
         return Arrays.stream(items)
             .filter(item -> pricedProducts.containsKey(item.toLowerCase()))
             .map(item -> new Product(item.toLowerCase(), pricedProducts.get(item.toLowerCase())))

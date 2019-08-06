@@ -1,6 +1,8 @@
 package discounts;
 
-import config.impl.DiscountConfig;
+import config.ConfigServiceProducer;
+import config.DiscountConfig;
+import config.DiscountConfigService;
 import org.junit.Test;
 import products.Product;
 
@@ -36,25 +38,24 @@ public class DiscountCalculatorTest {
 
     private static final double PRECISION = 0.01;
 
-    private final DiscountCalculator discountCalculator = new DiscountCalculator();
+    private static DiscountConfigService discountConfigService = ConfigServiceProducer.getDiscountConfigService();
 
     @Test
     public void applyDiscounts_none() {
-        discountCalculator.setDiscountRules(Collections.emptyList());
+        discountConfigService = Collections::emptyList;
 
-        List<AppliedDiscount> appliedDiscounts = discountCalculator.applyDiscounts(PRODUCTS);
+        List<AppliedDiscount> appliedDiscounts = new DiscountCalculator(discountConfigService).applyDiscounts(PRODUCTS);
 
         assertTrue(appliedDiscounts.isEmpty());
     }
 
     @Test
     public void applyDiscounts_Apples() {
-
-        discountCalculator.setDiscountRules(Collections.singletonList(
+        discountConfigService = () -> Collections.singletonList(
             DISCOUNT_APPLES
-        ));
+        );
 
-        List<AppliedDiscount> appliedDiscounts = discountCalculator.applyDiscounts(PRODUCTS);
+        List<AppliedDiscount> appliedDiscounts = new DiscountCalculator(discountConfigService).applyDiscounts(PRODUCTS);
 
         assertEquals(1, appliedDiscounts.size());
         assertEquals(DISCOUNT_AMOUNT_APPLES, appliedDiscounts.get(0).getDiscountAmount(), PRECISION);
@@ -62,11 +63,11 @@ public class DiscountCalculatorTest {
 
     @Test
     public void applyDiscounts_SoupSoupBread() {
-        discountCalculator.setDiscountRules(Collections.singletonList(
+        discountConfigService = () -> Collections.singletonList(
             DISCOUNT_SOUP_SOUP_BREAD
-        ));
+        );
 
-        List<AppliedDiscount> appliedDiscounts = discountCalculator.applyDiscounts(PRODUCTS);
+        List<AppliedDiscount> appliedDiscounts = new DiscountCalculator(discountConfigService).applyDiscounts(PRODUCTS);
 
         assertEquals(1, appliedDiscounts.size());
         assertEquals(DISCOUNT_AMOUNT_SOUP_SOUP_BREAD, appliedDiscounts.get(0).getDiscountAmount(), PRECISION);
@@ -74,11 +75,11 @@ public class DiscountCalculatorTest {
 
     @Test
     public void applyDiscounts_SoupBreadSoup() {
-        discountCalculator.setDiscountRules(Collections.singletonList(
+        discountConfigService = () -> Collections.singletonList(
             new DiscountConfig(Arrays.asList("soup", "bread", "soup"), 0.40, PREFIX_SOUP_SOUP_BREAD)
-        ));
+        );
 
-        List<AppliedDiscount> appliedDiscounts = discountCalculator.applyDiscounts(PRODUCTS);
+        List<AppliedDiscount> appliedDiscounts = new DiscountCalculator(discountConfigService).applyDiscounts(PRODUCTS);
 
         assertEquals(1, appliedDiscounts.size());
         assertEquals(DISCOUNT_AMOUNT_SOUP_SOUP_BREAD, appliedDiscounts.get(0).getDiscountAmount(), PRECISION);
@@ -86,12 +87,12 @@ public class DiscountCalculatorTest {
 
     @Test
     public void applyDiscounts_BothDiscounts() {
-        discountCalculator.setDiscountRules(Arrays.asList(
+        discountConfigService = () -> Arrays.asList(
             DISCOUNT_SOUP_SOUP_BREAD,
             DISCOUNT_APPLES
-        ));
+        );
 
-        List<AppliedDiscount> appliedDiscounts = discountCalculator.applyDiscounts(PRODUCTS);
+        List<AppliedDiscount> appliedDiscounts = new DiscountCalculator(discountConfigService).applyDiscounts(PRODUCTS);
 
         assertEquals(2, appliedDiscounts.size());
         assertEquals(
@@ -103,12 +104,12 @@ public class DiscountCalculatorTest {
 
     @Test
     public void applyDiscounts_OnlyOneOf2_SoupSoupBread() {
-        discountCalculator.setDiscountRules(Arrays.asList(
+        discountConfigService = () -> Arrays.asList(
             DISCOUNT_SOUP_SOUP_BREAD,
             DISCOUNT_BREAD
-        ));
+        );
 
-        List<AppliedDiscount> appliedDiscounts = discountCalculator.applyDiscounts(PRODUCTS);
+        List<AppliedDiscount> appliedDiscounts = new DiscountCalculator(discountConfigService).applyDiscounts(PRODUCTS);
 
         assertEquals(1, appliedDiscounts.size());
         assertEquals(DISCOUNT_AMOUNT_SOUP_SOUP_BREAD, appliedDiscounts.get(0).getDiscountAmount(), PRECISION);
@@ -117,15 +118,61 @@ public class DiscountCalculatorTest {
 
     @Test
     public void applyDiscounts_OnlyOneOf2_Bread() {
-        discountCalculator.setDiscountRules(Arrays.asList(
+        discountConfigService = () -> Arrays.asList(
             DISCOUNT_BREAD,
             DISCOUNT_SOUP_SOUP_BREAD
-        ));
+        );
 
-        List<AppliedDiscount> appliedDiscounts = discountCalculator.applyDiscounts(PRODUCTS);
+        List<AppliedDiscount> appliedDiscounts = new DiscountCalculator(discountConfigService).applyDiscounts(PRODUCTS);
 
         assertEquals(1, appliedDiscounts.size());
         assertEquals(DISCOUNT_AMOUNT_BREAD, appliedDiscounts.get(0).getDiscountAmount(), PRECISION);
         assertEquals(PREFIX_BREAD, appliedDiscounts.get(0).getDiscountTextPrefix());
+    }
+
+    @Test
+    public void applyDiscounts_SameDiscountAppliesTwice() {
+        List<Product> products = Arrays.asList(
+            new Product("soup", 0.65),
+            new Product("soup", 0.65),
+            new Product("bread", 0.80),
+            new Product("soup", 0.65),
+            new Product("soup", 0.65),
+            new Product("bread", 0.80),
+            new Product("milk", 1.30),
+            new Product("apples", 1.00)
+        );
+        discountConfigService = () -> Arrays.asList(
+            DISCOUNT_APPLES,
+            DISCOUNT_SOUP_SOUP_BREAD
+        );
+
+        List<AppliedDiscount> appliedDiscounts = new DiscountCalculator(discountConfigService).applyDiscounts(products);
+
+        assertEquals(3, appliedDiscounts.size());
+        assertEquals(2, appliedDiscounts.stream().filter(discount -> discount.getDiscountTextPrefix().equals(PREFIX_SOUP_SOUP_BREAD)).count());
+        assertEquals(1, appliedDiscounts.stream().filter(discount -> discount.getDiscountTextPrefix().equals(PREFIX_APPLES)).count());
+        assertEquals(
+            DISCOUNT_AMOUNT_APPLES + 2 * DISCOUNT_AMOUNT_SOUP_SOUP_BREAD,
+            appliedDiscounts.stream().map(AppliedDiscount::getDiscountAmount).reduce(0.00, Double::sum),
+            PRECISION
+        );
+    }
+
+    @Test
+    public void applyDiscounts_NoDiscountApplies() {
+        List<Product> products = Arrays.asList(
+            new Product("soup", 0.65),
+            new Product("bread", 0.80),
+            new Product("milk", 1.30)
+        );
+        discountConfigService = () -> Arrays.asList(
+            DISCOUNT_APPLES,
+            DISCOUNT_SOUP_SOUP_BREAD
+        );
+
+        List<AppliedDiscount> appliedDiscounts = new DiscountCalculator(discountConfigService).applyDiscounts(products);
+
+        assertTrue(appliedDiscounts.isEmpty());
     }
 }
