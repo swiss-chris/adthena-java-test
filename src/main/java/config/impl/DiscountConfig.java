@@ -2,6 +2,11 @@ package config.impl;
 
 import java.util.List;
 
+/**
+ * - The first constructor argument {@code productCombination} is a list of items that must be present in the basket for the discount to apply <br />
+ * - The second constructor argument {@code discountAmount} is the discounted amount for the same productCombination <br />
+ * - The third constructor argument {@code discountTextPrefix} is the text that will display in the console for this discount <br />
+ */
 // TODO toString(), hashCode(), equals()
 public class DiscountConfig {
 
@@ -10,7 +15,6 @@ public class DiscountConfig {
     private final String discountTextPrefix;
 
     DiscountConfig(List<String> productCombination, Double discountAmount, String discountTextPrefix) {
-
         this.productCombination = productCombination;
         this.discountAmount = discountAmount;
         this.discountTextPrefix = discountTextPrefix;

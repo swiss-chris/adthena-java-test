@@ -9,6 +9,12 @@ import java.util.Map;
 
 public class SimpleConfigService implements ConfigService {
 
+    /**
+     * Available items can be configured by modifying the list below. <br />
+     * Each product is a combination of the item name and it's price.
+     *
+     * @return a map of item names and their respective prices.
+     */
     @Override
     public Map<String, Double> getPricedProducts() {
         Map<String, Double> products = new HashMap<>();
@@ -19,11 +25,20 @@ public class SimpleConfigService implements ConfigService {
         return products;
     }
 
+    /**
+     * Discount Rules can be configured by adding a {@link DiscountConfig} to the list <br />
+     * <br />
+     * See the JavaDoc for {@link DiscountConfig} for an explanation of each of the constructor arguments. <br />
+     * <br />
+     * The Discounts are mutually exclusive and are applied in the order they appear in the returned list.
+     *
+     * @return a list of {@link DiscountConfig}
+     */
     @Override
     public List<DiscountConfig> getDiscountRules() {
         return Arrays.asList(
-            new DiscountConfig(Arrays.asList("apples"), 0.10, "Apples 10% off"),
-            new DiscountConfig(Arrays.asList("soup", "soup", "bread"), 0.40, "Bread 50% off (per 2 tins of soups)")
+            new DiscountConfig(Arrays.asList("soup", "soup", "bread"), 0.40, "Bread 50% off (per 2 tins of soups)"),
+            new DiscountConfig(Arrays.asList("apples"), 0.10, "Apples 10% off")
         );
     }
 

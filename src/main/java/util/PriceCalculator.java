@@ -1,15 +1,11 @@
 package util;
 
-import config.ConfigService;
-import config.impl.SimpleConfigService;
 import discounts.AppliedDiscount;
 import products.Product;
 
 import java.util.List;
 
 public class PriceCalculator {
-
-    private ConfigService configService = new SimpleConfigService();
 
     public Double calculateSubtotal(List<Product> products) {
         return products.stream()

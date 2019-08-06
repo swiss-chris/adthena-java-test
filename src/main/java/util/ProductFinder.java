@@ -13,6 +13,7 @@ public class ProductFinder {
 
     private ConfigService configService = new SimpleConfigService();
 
+    // TODO implement error messages for wrong input arguments
     public List<Product> getPricedProducts(String[] items) {
         Map<String, Double> pricedProducts = configService.getPricedProducts();
         return Arrays.stream(items)
