@@ -24,7 +24,7 @@ public class DiscountCalculator {
         List<String> remainingProducts = products.stream().map(Product::getName).collect(Collectors.toList());
 
         for (DiscountConfig discountRule : discountConfigService.getDiscountRules()) {
-            // apply same rule as many times as possible !
+            // apply the same discount as many times as possible !
             while (containsAllElements(remainingProducts, discountRule.getProductCombination())) {
                 removeAllElements(remainingProducts, discountRule.getProductCombination());
                 appliedDiscounts.add(new AppliedDiscount(discountRule.getDiscountTextPrefix(), discountRule.getDiscountAmount()));
