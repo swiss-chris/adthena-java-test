@@ -13,27 +13,27 @@ public class ListOperationsTest {
 
     @Test
     public void containsAllElements() {
-        assertTrue(ListOperations.containsAllElements(Arrays.asList("apple", "milk", "bread"), Arrays.asList("bread", "milk")));
-        assertFalse(ListOperations.containsAllElements(Arrays.asList("apple", "milk", "bread"), Arrays.asList("bread", "soup")));
+        assertTrue(ListOperations.containsAllElements(Arrays.asList("apples", "milk", "bread"), Arrays.asList("bread", "milk")));
+        assertFalse(ListOperations.containsAllElements(Arrays.asList("apples", "milk", "bread"), Arrays.asList("bread", "soup")));
     }
 
     @Test
     public void removeAllElements() {
         List<String> allItems = new ArrayList<>();
-        allItems.add("apple");
+        allItems.add("apples");
         allItems.add("milk");
         allItems.add("bread");
         List<String> itemsToRemove = Arrays.asList("bread", "milk");
 
         ListOperations.removeAllElements(allItems, itemsToRemove);
 
-        assertEquals(Collections.singletonList("apple"), allItems);
+        assertEquals(Collections.singletonList("apples"), allItems);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void removeAllElements_null() {
         List<String> allItems = new ArrayList<>();
-        allItems.add("apple");
+        allItems.add("apples");
         allItems.add("milk");
         allItems.add("bread");
         List<String> itemsToRemove = Arrays.asList("bread", "soup");
