@@ -12,5 +12,6 @@
 1. Run the program with `java PriceBasket [items...]`.
     * If the £ sign doesn't display correctly, try `export JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"` or else running the program with `java -Dfile.encoding=UTF-8 PriceBasket [items]`.
 1. To see a list of available items, execute `java PriceBasket` or `java PriceBasket -help`.
-1. The list of available items can be configured in `config.SimpleProductConfigService`
-1. The discount rules can be configured in `config.SimpleDiscountConfigService`.
+1. Configuring items and discounts:
+    * The list of available items can be configured in `config.SimpleProductConfigService`
+    * The discount rules can be configured in `config.SimpleDiscountConfigService`.
