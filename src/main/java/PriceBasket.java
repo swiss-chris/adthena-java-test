@@ -4,6 +4,8 @@ import config.ConfigServiceProducer;
  * ideas for extension: <br />
  * - add error messages if user adds wrong arguments/items <br/>
  * - add i18n <br />
+ * - allow configuring discounts in percent and calculate discount and discount text dynamically <br />
+ * - automated tests for static Main and Helper classes as well <br />
  */
 public class PriceBasket {
 
