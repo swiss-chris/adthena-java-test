@@ -5,19 +5,25 @@ import java.util.Map;
 
 class SimpleProductConfigService implements ProductConfigService {
 
+    private final Map<String, Double> PRODUCTS = new HashMap<>();
+
     /**
      * Available items can be configured by modifying the list below. <br />
-     * Each product is a combination of the item name and it's price.
-     *
-     * @return a map of item names and their respective prices.
+     * Each product is a combination of the item name and it's price. <br />
      */
+    SimpleProductConfigService() {
+        addProduct("soup", 0.65);
+        addProduct("bread", 0.80);
+        addProduct("milk", 1.30);
+        addProduct("apples", 1.00);
+    }
+
     @Override
     public Map<String, Double> getPricedProducts() {
-        Map<String, Double> products = new HashMap<>();
-        products.put("soup", 0.65);
-        products.put("bread", 0.80);
-        products.put("milk", 1.30);
-        products.put("apples", 1.00);
-        return products;
+        return PRODUCTS;
+    }
+
+    private void addProduct(final String name, final Double price) {
+        PRODUCTS.put(name.toLowerCase(), price);
     }
 }

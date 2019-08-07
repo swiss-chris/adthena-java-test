@@ -28,11 +28,11 @@ public class DiscountCalculator {
 
                 // check if ALL productCombination products are found inside remainingProducts
                 for (String discountCandidate : discountRule.getProductCombination()) {
-                    if (!remainingProductsCopy.contains(discountCandidate)) {
+                    if (!remainingProductsCopy.contains(discountCandidate.toLowerCase())) {
                         // continue outer for-loop !
                         continue allDiscounts;
                     } else {
-                        remainingProductsCopy.remove(discountCandidate);
+                        remainingProductsCopy.remove(discountCandidate.toLowerCase());
                     }
                 }
 
