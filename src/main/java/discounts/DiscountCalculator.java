@@ -26,17 +26,19 @@ public class DiscountCalculator {
             while (true) {
                 List<String> remainingProductsCopy = new ArrayList<>(remainingProducts);
 
-                // check if ALL productCombination products are found inside remainingProducts
+                // check if ALL productCombination products are found inside remainingProducts ...
                 for (String discountCandidate : discountRule.getProductCombination()) {
                     if (!remainingProductsCopy.contains(discountCandidate.toLowerCase())) {
-                        // continue outer for-loop !
+                        // this discount cannot be applied to the remaining items
+                        // continue OUTER for-loop ... !
+                        // ... and try to apply the next discount to the remaining products.
                         continue allDiscounts;
                     } else {
                         remainingProductsCopy.remove(discountCandidate.toLowerCase());
                     }
                 }
 
-                // if so, remove them all from remainingProducts and add a new AppliedDiscount
+                // ... if so, remove them all from remainingProducts and add a new AppliedDiscount
                 remainingProducts = remainingProductsCopy;
                 appliedDiscounts.add(new AppliedDiscount(discountRule.getDiscountTextPrefix(), discountRule.getDiscountAmount()));
             }
