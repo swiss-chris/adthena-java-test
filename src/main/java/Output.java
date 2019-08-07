@@ -1,11 +1,10 @@
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
 class Output {
-    private String subtotalText = "";
-    private List<String> discountTexts = new ArrayList<>();
-    private String totalText = "";
+    private final String subtotalText;
+    private final List<String> discountTexts;
+    private final String totalText;
 }
