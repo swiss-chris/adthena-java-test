@@ -15,6 +15,9 @@ public class ListOperations {
         return true;
     }
 
+    // TODO consider returning Optional.of(newList) instead of throwing an exeption 
+    // - preserving referential integrity and functional purity rather than modifying 
+    // the input, throwing an exception, and requiring explanation / preconditions.
     /**
      * PRECONDITION: make sure all elements are contained inside allItems by calling {@link ListOperations#containsAllElements} <br />
      *
