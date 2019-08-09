@@ -2,10 +2,7 @@ package discounts.util;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -25,12 +22,12 @@ public class ListOperationsTest {
         allItems.add("bread");
         List<String> itemsToRemove = Arrays.asList("bread", "milk");
 
-        ListOperations.removeAllElements(allItems, itemsToRemove);
+        Optional<List<String>> result = ListOperations.removeAllElements(allItems, itemsToRemove);
 
-        assertEquals(Collections.singletonList("apples"), allItems);
+        assertEquals(Collections.singletonList("apples"), result.get());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void removeAllElements_null() {
         List<String> allItems = new ArrayList<>();
         allItems.add("apples");
@@ -38,6 +35,8 @@ public class ListOperationsTest {
         allItems.add("bread");
         List<String> itemsToRemove = Arrays.asList("bread", "soup");
 
-        ListOperations.removeAllElements(allItems, itemsToRemove);
+        Optional<List<String>> result = ListOperations.removeAllElements(allItems, itemsToRemove);
+
+        assertFalse(result.isPresent());
     }
 }
