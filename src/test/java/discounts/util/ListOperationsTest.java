@@ -4,15 +4,10 @@ import org.junit.Test;
 
 import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class ListOperationsTest {
-
-    @Test
-    public void containsAllElements() {
-        assertTrue(ListOperations.containsAllElements(Arrays.asList("apples", "milk", "bread"), Arrays.asList("bread", "milk")));
-        assertFalse(ListOperations.containsAllElements(Arrays.asList("apples", "milk", "bread"), Arrays.asList("bread", "soup")));
-    }
 
     @Test
     public void removeAllElements() {
@@ -24,6 +19,7 @@ public class ListOperationsTest {
 
         Optional<List<String>> result = ListOperations.removeAllElements(allItems, itemsToRemove);
 
+        //noinspection OptionalGetWithoutIsPresent
         assertEquals(Collections.singletonList("apples"), result.get());
     }
 
