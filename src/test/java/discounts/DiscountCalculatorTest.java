@@ -3,11 +3,11 @@ package discounts;
 import config.ConfigServiceProducer;
 import config.DiscountConfig;
 import config.DiscountConfigService;
+import cyclops.data.Seq;
 import org.junit.Test;
 import products.Product;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -32,10 +32,10 @@ public class DiscountCalculatorTest {
     private static final double DISCOUNT_AMOUNT_BREAD = 0.20;
     private static final double DISCOUNT_AMOUNT_SOUP_SOUP_BREAD = 0.40;
 
-    private static final DiscountConfig DISCOUNT_EMPTY = new DiscountConfig(Collections.emptyList(), DISCOUNT_AMOUNT_APPLES, PREFIX_APPLES);
-    private static final DiscountConfig DISCOUNT_APPLES = new DiscountConfig(Collections.singletonList("apples"), DISCOUNT_AMOUNT_APPLES, PREFIX_APPLES);
-    private static final DiscountConfig DISCOUNT_BREAD = new DiscountConfig(Collections.singletonList("bread"), DISCOUNT_AMOUNT_BREAD, PREFIX_BREAD);
-    private static final DiscountConfig DISCOUNT_SOUP_SOUP_BREAD = new DiscountConfig(Arrays.asList("soup", "soup", "bread"), DISCOUNT_AMOUNT_SOUP_SOUP_BREAD, PREFIX_SOUP_SOUP_BREAD);
+    private static final DiscountConfig DISCOUNT_EMPTY = new DiscountConfig(Seq.empty(), DISCOUNT_AMOUNT_APPLES, PREFIX_APPLES);
+    private static final DiscountConfig DISCOUNT_APPLES = new DiscountConfig(Seq.of("apples"), DISCOUNT_AMOUNT_APPLES, PREFIX_APPLES);
+    private static final DiscountConfig DISCOUNT_BREAD = new DiscountConfig(Seq.of("bread"), DISCOUNT_AMOUNT_BREAD, PREFIX_BREAD);
+    private static final DiscountConfig DISCOUNT_SOUP_SOUP_BREAD = new DiscountConfig(Seq.of("soup", "soup", "bread"), DISCOUNT_AMOUNT_SOUP_SOUP_BREAD, PREFIX_SOUP_SOUP_BREAD);
 
     private static final double PRECISION = 0.01;
 
@@ -43,7 +43,7 @@ public class DiscountCalculatorTest {
 
     @Test
     public void applyDiscounts_none() {
-        discountConfigService = Collections::emptyList;
+        discountConfigService = Seq::empty;
 
         List<AppliedDiscount> appliedDiscounts = new DiscountCalculator(discountConfigService).applyDiscounts(PRODUCTS);
 
@@ -52,7 +52,7 @@ public class DiscountCalculatorTest {
 
     @Test
     public void applyDiscounts_Apples() {
-        discountConfigService = () -> Collections.singletonList(
+        discountConfigService = () -> Seq.of(
             DISCOUNT_APPLES
         );
 
@@ -64,7 +64,7 @@ public class DiscountCalculatorTest {
 
     @Test
     public void applyDiscounts_SoupSoupBread() {
-        discountConfigService = () -> Collections.singletonList(
+        discountConfigService = () -> Seq.of(
             DISCOUNT_SOUP_SOUP_BREAD
         );
 
@@ -76,8 +76,8 @@ public class DiscountCalculatorTest {
 
     @Test
     public void applyDiscounts_SoupBreadSoup() {
-        discountConfigService = () -> Collections.singletonList(
-            new DiscountConfig(Arrays.asList("soup", "bread", "soup"), 0.40, PREFIX_SOUP_SOUP_BREAD)
+        discountConfigService = () -> Seq.of(
+            new DiscountConfig(Seq.of("soup", "bread", "soup"), 0.40, PREFIX_SOUP_SOUP_BREAD)
         );
 
         List<AppliedDiscount> appliedDiscounts = new DiscountCalculator(discountConfigService).applyDiscounts(PRODUCTS);
@@ -88,7 +88,7 @@ public class DiscountCalculatorTest {
 
     @Test
     public void applyDiscounts_BothDiscounts() {
-        discountConfigService = () -> Arrays.asList(
+        discountConfigService = () -> Seq.of(
             DISCOUNT_SOUP_SOUP_BREAD,
             DISCOUNT_APPLES
         );
@@ -105,7 +105,7 @@ public class DiscountCalculatorTest {
 
     @Test
     public void applyDiscounts_OnlyOneOf2_SoupSoupBread() {
-        discountConfigService = () -> Arrays.asList(
+        discountConfigService = () -> Seq.of(
             DISCOUNT_SOUP_SOUP_BREAD,
             DISCOUNT_BREAD
         );
@@ -119,7 +119,7 @@ public class DiscountCalculatorTest {
 
     @Test
     public void applyDiscounts_OnlyOneOf2_Bread() {
-        discountConfigService = () -> Arrays.asList(
+        discountConfigService = () -> Seq.of(
             DISCOUNT_BREAD,
             DISCOUNT_SOUP_SOUP_BREAD
         );
@@ -143,7 +143,7 @@ public class DiscountCalculatorTest {
             new Product("milk", 1.30),
             new Product("apples", 1.00)
         );
-        discountConfigService = () -> Arrays.asList(
+        discountConfigService = () -> Seq.of(
             DISCOUNT_APPLES,
             DISCOUNT_SOUP_SOUP_BREAD
         );
@@ -167,7 +167,7 @@ public class DiscountCalculatorTest {
             new Product("bread", 0.80),
             new Product("milk", 1.30)
         );
-        discountConfigService = () -> Arrays.asList(
+        discountConfigService = () -> Seq.of(
             DISCOUNT_APPLES,
             DISCOUNT_SOUP_SOUP_BREAD
         );
@@ -184,7 +184,7 @@ public class DiscountCalculatorTest {
             new Product("bread", 0.80),
             new Product("milk", 1.30)
         );
-        discountConfigService = () -> Collections.singletonList(
+        discountConfigService = () -> Seq.of(
             DISCOUNT_EMPTY
         );
 

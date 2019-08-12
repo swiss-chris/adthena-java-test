@@ -1,7 +1,7 @@
 package config;
 
-import java.util.List;
+import cyclops.data.Seq;
 
 public interface DiscountConfigService {
-    List<DiscountConfig> getDiscountConfigs();
+    Seq<DiscountConfig> getDiscountConfigs();
 }

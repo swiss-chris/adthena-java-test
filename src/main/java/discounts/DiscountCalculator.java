@@ -2,12 +2,12 @@ package discounts;
 
 import config.DiscountConfig;
 import config.DiscountConfigService;
+import cyclops.data.Seq;
+import cyclops.data.Vector;
 import products.Product;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static discounts.util.ListOperations.removeAllElements;
 
@@ -20,25 +20,22 @@ public class DiscountCalculator {
     }
 
     public List<AppliedDiscount> applyDiscounts(final List<Product> products) {
-        final List<AppliedDiscount> appliedDiscounts = new ArrayList<>();
-
-        List<String> remainingProducts = products.stream().map(Product::getName).collect(Collectors.toList());
-        for (final DiscountConfig discountConfig : getValidDiscoutConfigs()) {
-            // apply the same discount as many times as possible before applying next discount !
-            Optional<List<String>> remainingProductsAfterRemoval;
-            while ((remainingProductsAfterRemoval = removeAllElements(remainingProducts, discountConfig.getProductCombination())).isPresent()) {
-                remainingProducts = remainingProductsAfterRemoval.get();
-                appliedDiscounts.add(new AppliedDiscount(discountConfig.getDiscountTextPrefix(), discountConfig.getDiscountAmount()));
-            }
-        }
-
-        return appliedDiscounts;
+        return discountConfigService.getDiscountConfigs().stream()
+            // prevent infinite recursion within applySingleDiscount
+            .filter(discountConfig -> !discountConfig.getProductCombination().isEmpty())
+            .reduce(new AccumulatorData(Vector.fromStream(products.stream().map(Product::getName)), Seq.empty()),
+                this::applySingleDiscount
+            ).getAppliedDiscounts().toList();
     }
 
-    // remove invalid "empty" product combinations (prevent infinite while-loop)
-    private List<DiscountConfig> getValidDiscoutConfigs() {
-        return discountConfigService.getDiscountConfigs().stream()
-            .filter(discountConfig -> !discountConfig.getProductCombination().isEmpty())
-            .collect(Collectors.toList());
+    private AccumulatorData applySingleDiscount(final AccumulatorData accumulatorData, final DiscountConfig discountConfig) {
+        Optional<Vector<String>> remainingProducts = removeAllElements(accumulatorData.getRemainingProducts(), discountConfig.getProductCombination());
+        if (remainingProducts.isPresent()) {
+            AppliedDiscount appliedDiscount = new AppliedDiscount(discountConfig.getDiscountTextPrefix(), discountConfig.getDiscountAmount());
+            AccumulatorData nextAccumulatorData = new AccumulatorData(remainingProducts.get(), accumulatorData.getAppliedDiscounts().plus(appliedDiscount));
+            return applySingleDiscount(nextAccumulatorData, discountConfig);
+        } else {
+            return accumulatorData;
+        }
     }
 }

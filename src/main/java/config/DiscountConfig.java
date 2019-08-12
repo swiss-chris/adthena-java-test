@@ -1,8 +1,7 @@
 package config;
 
+import cyclops.data.Seq;
 import lombok.Value;
-
-import java.util.List;
 
 /**
  * - The first field {@code productCombination} is a list of items that must be present in the basket for the discount to apply <br />
@@ -11,7 +10,7 @@ import java.util.List;
  */
 @Value
 public class DiscountConfig {
-    List<String> productCombination;
+    Seq<String> productCombination;
     Double discountAmount;
     String discountTextPrefix;
 }

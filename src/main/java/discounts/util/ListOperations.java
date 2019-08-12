@@ -1,18 +1,25 @@
 package discounts.util;
 
-import java.util.ArrayList;
-import java.util.List;
+import cyclops.data.Seq;
+import cyclops.data.Vector;
+
 import java.util.Optional;
 
 public class ListOperations {
 
-    public static Optional<List<String>> removeAllElements(final List<String> allItems, final List<String> itemsToRemove) {
-        final ArrayList<String> allItemsCopy = new ArrayList<>(allItems);
+    /**
+     * @return an {@link Optional} of the items remaining after removing all {@code itemsToRemove},
+     * or {@link Optional#empty()} if at least one of the {@code itemsToRemove} could not be removed from {@code allItems}. <br />
+     * If {@code itemsToRemove} is empty, returns {@code allItems}
+     */
+    public static Optional<Vector<String>> removeAllElements(Vector<String> allItems, final Seq<String> itemsToRemove) {
         for (final String itemToRemove : itemsToRemove) {
-            if (!allItemsCopy.remove(itemToRemove)) {
+            if (allItems.containsValue(itemToRemove)) {
+                allItems = allItems.removeValue(itemToRemove);
+            } else {
                 return Optional.empty();
             }
         }
-        return Optional.of(allItemsCopy);
+        return Optional.of(allItems);
     }
 }
