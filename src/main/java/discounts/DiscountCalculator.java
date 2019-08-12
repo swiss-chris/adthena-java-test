@@ -20,21 +20,22 @@ public class DiscountCalculator {
     }
 
     public List<AppliedDiscount> applyDiscounts(final List<Product> products) {
+        List<String> productNames = products.stream().map(Product::getName).collect(Collectors.toList());
         return discountConfigService.getDiscountConfigs().stream()
             // prevent infinite while loop within applySingleDiscount
             .filter(discountConfig -> !discountConfig.getProductCombination().isEmpty())
-            .reduce(new AccumulatorData(products.stream().map(Product::getName).collect(Collectors.toList()), new ArrayList<>()),
+            .reduce(new AccumulatorData(productNames, new ArrayList<>()),
                 this::applySingleDiscount,
-                (accumulatorData, accumulatorData2) -> accumulatorData2
-            ).getAppliedDiscounts();
+                (accumulatorData, accumulatorData2) -> accumulatorData2)
+            .getAppliedDiscounts();
     }
 
     private AccumulatorData applySingleDiscount(AccumulatorData accumulatorData, final DiscountConfig discountConfig) {
         Optional<List<String>> remainingProducts;
+        // apply the same discount as many times as possible !
         while ((remainingProducts = removeAllElements(accumulatorData.getRemainingProducts(), discountConfig.getProductCombination())).isPresent()) {
-            AppliedDiscount appliedDiscount = new AppliedDiscount(discountConfig.getDiscountTextPrefix(), discountConfig.getDiscountAmount());
             List<AppliedDiscount> appliedDiscounts = new ArrayList<>(accumulatorData.getAppliedDiscounts());
-            appliedDiscounts.add(appliedDiscount);
+            appliedDiscounts.add(new AppliedDiscount(discountConfig.getDiscountTextPrefix(), discountConfig.getDiscountAmount()));
             accumulatorData = new AccumulatorData(remainingProducts.get(), appliedDiscounts);
         }
         return accumulatorData;
