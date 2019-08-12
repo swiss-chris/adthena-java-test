@@ -23,7 +23,7 @@ public class DiscountCalculator {
         final List<AppliedDiscount> appliedDiscounts = new ArrayList<>();
 
         List<String> remainingProducts = products.stream().map(Product::getName).collect(Collectors.toList());
-        for (final DiscountConfig discountConfig : discountConfigService.getDiscountConfigs()) {
+        for (final DiscountConfig discountConfig : getValidDiscoutConfigs()) {
             // apply the same discount as many times as possible before applying next discount !
             Optional<List<String>> remainingProductsAfterRemoval;
             while ((remainingProductsAfterRemoval = removeAllElements(remainingProducts, discountConfig.getProductCombination())).isPresent()) {
@@ -33,5 +33,12 @@ public class DiscountCalculator {
         }
 
         return appliedDiscounts;
+    }
+
+    // remove invalid "empty" product combinations (prevent infinite while-loop)
+    private List<DiscountConfig> getValidDiscoutConfigs() {
+        return discountConfigService.getDiscountConfigs().stream()
+            .filter(discountConfig -> !discountConfig.getProductCombination().isEmpty())
+            .collect(Collectors.toList());
     }
 }

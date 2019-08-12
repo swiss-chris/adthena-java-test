@@ -32,6 +32,7 @@ public class DiscountCalculatorTest {
     private static final double DISCOUNT_AMOUNT_BREAD = 0.20;
     private static final double DISCOUNT_AMOUNT_SOUP_SOUP_BREAD = 0.40;
 
+    private static final DiscountConfig DISCOUNT_EMPTY = new DiscountConfig(Collections.emptyList(), DISCOUNT_AMOUNT_APPLES, PREFIX_APPLES);
     private static final DiscountConfig DISCOUNT_APPLES = new DiscountConfig(Collections.singletonList("apples"), DISCOUNT_AMOUNT_APPLES, PREFIX_APPLES);
     private static final DiscountConfig DISCOUNT_BREAD = new DiscountConfig(Collections.singletonList("bread"), DISCOUNT_AMOUNT_BREAD, PREFIX_BREAD);
     private static final DiscountConfig DISCOUNT_SOUP_SOUP_BREAD = new DiscountConfig(Arrays.asList("soup", "soup", "bread"), DISCOUNT_AMOUNT_SOUP_SOUP_BREAD, PREFIX_SOUP_SOUP_BREAD);
@@ -173,6 +174,23 @@ public class DiscountCalculatorTest {
 
         List<AppliedDiscount> appliedDiscounts = new DiscountCalculator(discountConfigService).applyDiscounts(products);
 
+        assertTrue(appliedDiscounts.isEmpty());
+    }
+
+    @Test
+    public void applyDiscounts_EmptyDiscount() {
+        List<Product> products = Arrays.asList(
+            new Product("soup", 0.65),
+            new Product("bread", 0.80),
+            new Product("milk", 1.30)
+        );
+        discountConfigService = () -> Collections.singletonList(
+            DISCOUNT_EMPTY
+        );
+
+        List<AppliedDiscount> appliedDiscounts = new DiscountCalculator(discountConfigService).applyDiscounts(products);
+
+        // implicitly tests that there is no infinite loop for invalid discount configs
         assertTrue(appliedDiscounts.isEmpty());
     }
 }
