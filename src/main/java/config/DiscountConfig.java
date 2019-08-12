@@ -1,6 +1,6 @@
 package config;
 
-import lombok.Data;
+import lombok.Value;
 
 import java.util.List;
 
@@ -9,9 +9,9 @@ import java.util.List;
  * - The second field {@code discountAmount} is the discounted amount for the same productCombination <br />
  * - The third field {@code discountTextPrefix} is the text that will display in the console for this discount <br />
  */
-@Data
+@Value
 public class DiscountConfig {
-    private final List<String> productCombination;
-    private final Double discountAmount;
-    private final String discountTextPrefix;
+    List<String> productCombination;
+    Double discountAmount;
+    String discountTextPrefix;
 }

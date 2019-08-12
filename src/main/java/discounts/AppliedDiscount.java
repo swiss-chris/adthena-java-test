@@ -1,9 +1,9 @@
 package discounts;
 
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class AppliedDiscount {
-    private final String discountTextPrefix;
-    private final Double discountAmount;
+    String discountTextPrefix;
+    Double discountAmount;
 }

@@ -1,10 +1,10 @@
-import lombok.Data;
+import lombok.Value;
 
 import java.util.List;
 
-@Data
+@Value
 class Output {
-    private final String subtotalText;
-    private final List<String> discountTexts;
-    private final String totalText;
+    String subtotalText;
+    List<String> discountTexts;
+    String totalText;
 }

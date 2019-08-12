@@ -23,12 +23,12 @@ public class DiscountCalculator {
         final List<AppliedDiscount> appliedDiscounts = new ArrayList<>();
 
         List<String> remainingProducts = products.stream().map(Product::getName).collect(Collectors.toList());
-        for (final DiscountConfig discountRule : discountConfigService.getDiscountRules()) {
+        for (final DiscountConfig discountConfig : discountConfigService.getDiscountConfigs()) {
             // apply the same discount as many times as possible before applying next discount !
             Optional<List<String>> remainingProductsAfterRemoval;
-            while ((remainingProductsAfterRemoval = removeAllElements(remainingProducts, discountRule.getProductCombination())).isPresent()) {
+            while ((remainingProductsAfterRemoval = removeAllElements(remainingProducts, discountConfig.getProductCombination())).isPresent()) {
                 remainingProducts = remainingProductsAfterRemoval.get();
-                appliedDiscounts.add(new AppliedDiscount(discountRule.getDiscountTextPrefix(), discountRule.getDiscountAmount()));
+                appliedDiscounts.add(new AppliedDiscount(discountConfig.getDiscountTextPrefix(), discountConfig.getDiscountAmount()));
             }
         }
 

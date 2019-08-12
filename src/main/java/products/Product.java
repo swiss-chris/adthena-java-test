@@ -1,9 +1,9 @@
 package products;
 
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class Product {
-    private final String name;
-    private final Double price;
+    String name;
+    Double price;
 }

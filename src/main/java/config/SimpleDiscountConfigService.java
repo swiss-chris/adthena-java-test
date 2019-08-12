@@ -15,7 +15,7 @@ class SimpleDiscountConfigService implements DiscountConfigService {
      * @return a list of {@link DiscountConfig}
      */
     @Override
-    public List<DiscountConfig> getDiscountRules() {
+    public List<DiscountConfig> getDiscountConfigs() {
         return Arrays.asList(
             new DiscountConfig(Arrays.asList("soup", "soup", "bread"), 0.40, "Bread 50% off"),
             new DiscountConfig(Arrays.asList("apples"), 0.10, "Apples 10% off")
