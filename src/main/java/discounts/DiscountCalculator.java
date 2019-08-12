@@ -21,21 +21,19 @@ public class DiscountCalculator {
 
     public List<AppliedDiscount> applyDiscounts(final List<Product> products) {
         return discountConfigService.getDiscountConfigs().stream()
-            // prevent infinite recursion within applySingleDiscount
+            // prevent infinite while loop within applySingleDiscount
             .filter(discountConfig -> !discountConfig.getProductCombination().isEmpty())
             .reduce(new AccumulatorData(Vector.fromStream(products.stream().map(Product::getName)), Seq.empty()),
                 this::applySingleDiscount
             ).getAppliedDiscounts().toList();
     }
 
-    private AccumulatorData applySingleDiscount(final AccumulatorData accumulatorData, final DiscountConfig discountConfig) {
-        Optional<Vector<String>> remainingProducts = removeAllElements(accumulatorData.getRemainingProducts(), discountConfig.getProductCombination());
-        if (remainingProducts.isPresent()) {
+    private AccumulatorData applySingleDiscount(AccumulatorData accumulatorData, final DiscountConfig discountConfig) {
+        Optional<Vector<String>> remainingProducts;
+        while ((remainingProducts = removeAllElements(accumulatorData.getRemainingProducts(), discountConfig.getProductCombination())).isPresent()) {
             AppliedDiscount appliedDiscount = new AppliedDiscount(discountConfig.getDiscountTextPrefix(), discountConfig.getDiscountAmount());
-            AccumulatorData nextAccumulatorData = new AccumulatorData(remainingProducts.get(), accumulatorData.getAppliedDiscounts().plus(appliedDiscount));
-            return applySingleDiscount(nextAccumulatorData, discountConfig);
-        } else {
-            return accumulatorData;
+            accumulatorData = new AccumulatorData(remainingProducts.get(), accumulatorData.getAppliedDiscounts().plus(appliedDiscount));
         }
+        return accumulatorData;
     }
 }
