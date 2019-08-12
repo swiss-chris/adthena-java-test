@@ -20,24 +20,25 @@ public class DiscountCalculator {
     }
 
     public List<AppliedDiscount> applyDiscounts(final List<Product> products) {
-        List<String> productNames = products.stream().map(Product::getName).collect(Collectors.toList());
-        return discountConfigService.getDiscountConfigs().stream()
-            // prevent infinite while loop within applySingleDiscount
-            .filter(discountConfig -> !discountConfig.getProductCombination().isEmpty())
-            .reduce(new AccumulatorData(productNames, new ArrayList<>()),
-                this::applySingleDiscount,
-                (accumulatorData, accumulatorData2) -> accumulatorData2)
-            .getAppliedDiscounts();
+        final List<AppliedDiscount> appliedDiscounts = new ArrayList<>();
+
+        List<String> remainingProducts = products.stream().map(Product::getName).collect(Collectors.toList());
+        for (final DiscountConfig discountConfig : getValidDiscoutConfigs()) {
+            // apply the same discount as many times as possible before applying next discount !
+            Optional<List<String>> remainingProductsAfterRemoval;
+            while ((remainingProductsAfterRemoval = removeAllElements(remainingProducts, discountConfig.getProductCombination())).isPresent()) {
+                remainingProducts = remainingProductsAfterRemoval.get();
+                appliedDiscounts.add(new AppliedDiscount(discountConfig.getDiscountTextPrefix(), discountConfig.getDiscountAmount()));
+            }
+        }
+
+        return appliedDiscounts;
     }
 
-    private AccumulatorData applySingleDiscount(AccumulatorData accumulatorData, final DiscountConfig discountConfig) {
-        Optional<List<String>> remainingProducts;
-        // apply the same discount as many times as possible !
-        while ((remainingProducts = removeAllElements(accumulatorData.getRemainingProducts(), discountConfig.getProductCombination())).isPresent()) {
-            List<AppliedDiscount> appliedDiscounts = new ArrayList<>(accumulatorData.getAppliedDiscounts());
-            appliedDiscounts.add(new AppliedDiscount(discountConfig.getDiscountTextPrefix(), discountConfig.getDiscountAmount()));
-            accumulatorData = new AccumulatorData(remainingProducts.get(), appliedDiscounts);
-        }
-        return accumulatorData;
+    // remove invalid "empty" product combinations (prevent infinite while-loop)
+    private List<DiscountConfig> getValidDiscoutConfigs() {
+        return discountConfigService.getDiscountConfigs().stream()
+            .filter(discountConfig -> !discountConfig.getProductCombination().isEmpty())
+            .collect(Collectors.toList());
     }
 }
